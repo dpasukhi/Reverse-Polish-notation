@@ -26,6 +26,3 @@
 *.exe
 *.out
 *.app
-/sln/vc19/**
-/out/build/**
-/.vs/**
