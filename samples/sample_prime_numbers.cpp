@@ -9,12 +9,7 @@ int main()
 	//string str{ "1+2" };
 	//string str{ "-5+(8+1)" };
 	RevPol a(str);
-	a.reads();
-	a.calculate();
-	cout << str << endl;
-	for (const auto& i : a.tmp)
-		cout << i.str << " ";
-	cout << endl;
-	for (const auto& i : a.polexprs)
-		cout << i << " ";
+	a.Print_Begin();
+	a.Print_Revers();
+	cout << a.Result();
 }

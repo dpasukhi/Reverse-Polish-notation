@@ -1,9 +1,10 @@
 #include "ReversePolish.h"
+#include <cmath>
 RevPol::RevPol(std::string str)
 {
 	status = Status::Wait;
 	exprs = str;
-	//calculate();
+	calculate();
 }
 
 bool RevPol::is_operation(char in)
@@ -18,6 +19,56 @@ bool RevPol::is_digit(const char& in)
 bool RevPol::is_ParTh(const char& in)
 {
 	return (in == '(' || in == ')');
+}
+double RevPol::Result()
+{
+	std::vector<double> tmp;
+	for (int i=0;i<polexprs.size();i++)
+	{
+		std::string v = polexprs[i];
+		if (v == "+" || v == "-" || v == "*" || v == "/" || v == "^")
+		{
+			if (tmp.size() == 1)
+			{
+				if (v == "-")
+					tmp[0] = -tmp[0];
+			}
+			else 
+			{
+				if (v == "+")
+				{
+					tmp[tmp.size() - 2] += tmp[tmp.size() - 1];
+				}
+				else if (v == "-")
+				{
+					tmp[tmp.size() - 2] -= tmp[tmp.size() - 1];
+				}
+				else if (v == "*")
+				{
+					tmp[tmp.size() - 2] *= tmp[tmp.size() - 1];
+				}
+				else if (v == "/")
+				{
+					tmp[tmp.size() - 2] /= tmp[tmp.size() - 1];
+				}
+				else if (v == "^")
+				{
+					tmp[tmp.size() - 2] = pow(tmp[tmp.size() - 2],tmp[tmp.size() - 1]);
+				}
+				tmp.pop_back();
+			}
+		}
+		else
+		{
+			tmp.push_back(stod(v));
+		}
+	}
+	if (tmp.size()!=1)
+	{
+		std::cout << "Error" << std::endl;
+	}
+	return tmp.at(0);
+
 }
 void RevPol::reads()
 {
@@ -65,8 +116,7 @@ void RevPol::reads()
 
 void RevPol::calculate()
 {
-	//reads();
-	//correct();
+	reads();
 	for (int i = 0; i < tmp.size(); i++)
 	{
 		switch (status)
@@ -280,9 +330,6 @@ MOMO:
 		//std::cout << "Error" << std::endl;
 }
 
-void RevPol::correct()
-{
-}
 
 void RevPol::One(int ind)
 {
@@ -309,4 +356,19 @@ void RevPol::Four(int ind)
 void RevPol::Five(int ind)
 {
 	status = Status::Error;
+}
+
+void RevPol::Print_Revers()
+{
+	for (const auto& v:polexprs)
+	{
+		std::cout << v << " ";
+	}
+	std::cout << std::endl;
+}
+
+void RevPol::Print_Begin()
+{
+	std::cout << exprs;
+	std::cout << std::endl;
 }

@@ -38,10 +38,9 @@ public:
 
 class RevPol
 {
-public:
-	RevPol(std::string);
+private:
+
 	std::vector<Type> tmp;
-//private:
 	Status status;
 	//std::stack<double> st;
 	std::string exprs;
@@ -52,10 +51,14 @@ public:
 	bool is_ParTh(const char&);
 	void reads();
 	void calculate();
-	void correct();
 	void One(int);
 	void Two(int);
 	void Three(int);
 	void Four(int);
 	void Five(int);
+public:	
+	RevPol(std::string);
+	void Print_Revers();
+	void Print_Begin();
+	double Result();
 };
