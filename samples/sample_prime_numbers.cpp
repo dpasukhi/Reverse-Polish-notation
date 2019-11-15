@@ -1,7 +1,6 @@
 ﻿#include <iostream>
 #include "ReversePolish.h"
 #include <string>
-#include <vector>
 using namespace std;
 int main()
 {
@@ -12,4 +11,6 @@ int main()
 	a.Print_Begin();
 	a.Print_Revers();
 	cout << a.Result();
+	system("pause>nul");
+	return 0;
 }
