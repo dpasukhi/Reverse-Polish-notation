@@ -42,7 +42,6 @@ private:
 
 	std::vector<Type> tmp;
 	Status status;
-	//std::stack<double> st;
 	std::string exprs;
 	std::stack<Type> oper;
 	std::vector<std::string> polexprs;
@@ -61,4 +60,12 @@ public:
 	void Print_Revers();
 	void Print_Begin();
 	double Result();
+	friend std::ostream& operator<<(std::ostream& ostr, const RevPol& RP)
+	{
+		<for (const auto& v : polexprs)
+		{
+			ostr << v << " ";
+		}
+		ostr << std::endl;
+	}
 };
