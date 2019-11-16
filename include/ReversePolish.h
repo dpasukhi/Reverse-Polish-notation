@@ -55,17 +55,25 @@ private:
 	void Three(int);
 	void Four(int);
 	void Five(int);
+	double Result();
 public:	
 	RevPol(std::string);
 	void Print_Revers();
 	void Print_Begin();
-	double Result();
+	//double Result();
+	double Resulti;
+
 	friend std::ostream& operator<<(std::ostream& ostr, const RevPol& RP)
 	{
-		<for (const auto& v : polexprs)
+		ostr << RP.exprs;
+		ostr << std::endl;
+		for (const auto& v : RP.polexprs)
 		{
 			ostr << v << " ";
 		}
 		ostr << std::endl;
+		ostr << RP.Resulti;
+		ostr << std::endl;
+		return ostr;
 	}
 };

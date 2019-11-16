@@ -5,6 +5,7 @@ RevPol::RevPol(std::string str)
 	status = Status::Wait;
 	exprs = str;
 	calculate();
+	Resulti = Result();
 }
 
 bool RevPol::is_operation(char in)
@@ -22,52 +23,56 @@ bool RevPol::is_ParTh(const char& in)
 }
 double RevPol::Result()
 {
-	std::vector<double> tmp;
+	std::vector<double> tmpp;
 	for (int i=0;i<polexprs.size();i++)
 	{
 		std::string v = polexprs[i];
-		if (v == "+" || v == "-" || v == "*" || v == "/" || v == "^")
+		if (v == "+" || v == "-" || v == "*" || v == "/" || v == "^"|| v == "~")
 		{
 			if (tmp.size() == 1)
 			{
-				if (v == "-")
-					tmp[0] = -tmp[0];
+				if (v == "-"||v == "~")
+					tmpp[0] = -tmpp[0];
+			}
+			else if (v == "~")
+			{
+				tmpp[tmpp.size() - 1] = -tmpp[tmpp.size() - 1];
 			}
 			else 
 			{
 				if (v == "+")
 				{
-					tmp[tmp.size() - 2] += tmp[tmp.size() - 1];
+					tmpp[tmpp.size() - 2] += tmpp[tmpp.size() - 1];
 				}
 				else if (v == "-")
 				{
-					tmp[tmp.size() - 2] -= tmp[tmp.size() - 1];
+					tmpp[tmpp.size() - 2] -= tmpp[tmpp.size() - 1];
 				}
 				else if (v == "*")
 				{
-					tmp[tmp.size() - 2] *= tmp[tmp.size() - 1];
+					tmpp[tmpp.size() - 2] *= tmpp[tmpp.size() - 1];
 				}
 				else if (v == "/")
 				{
-					tmp[tmp.size() - 2] /= tmp[tmp.size() - 1];
+					tmpp[tmpp.size() - 2] /= tmpp[tmpp.size() - 1];
 				}
 				else if (v == "^")
 				{
-					tmp[tmp.size() - 2] = pow(tmp[tmp.size() - 2],tmp[tmp.size() - 1]);
+					tmpp[tmpp.size() - 2] = pow(tmpp[tmpp.size() - 2],tmpp[tmpp.size() - 1]);
 				}
-				tmp.pop_back();
+				tmpp.pop_back();
 			}
 		}
 		else
 		{
-			tmp.push_back(stod(v));
+			tmpp.push_back(stod(v));
 		}
 	}
-	if (tmp.size()!=1)
+	if (tmpp.size()!=1)
 	{
 		std::cout << "Error" << std::endl;
 	}
-	return tmp.at(0);
+	return tmpp.at(0);
 
 }
 void RevPol::reads()
@@ -92,12 +97,27 @@ void RevPol::reads()
 			st = exprs[i];
 			Type temp(st, EType::Operation);
 			if ((exprs[i] == '+' || exprs[i] == '-') & (i == 0 || exprs[i - 1] == '('))
+			{
 				temp.pr = Priority::O;
-			else if ((exprs[i] == '*' || exprs[i] == '/'|| exprs[i] == '^'))
-				temp.pr = Priority::T;
-			else if ((exprs[i] == '+' || exprs[i] == '-'))
-				temp.pr = Priority::F;
-			tmp.push_back(temp);
+				if (exprs[i] == '+')
+					tmp.push_back(temp);
+				else
+				{
+					Type tempo("~", EType::Operation);
+					tempo.pr = Priority::O;
+					tmp.push_back(tempo);
+				}
+					
+
+			}
+			else 
+			{
+				if ((exprs[i] == '*' || exprs[i] == '/' || exprs[i] == '^'))
+					temp.pr = Priority::T;
+				else if ((exprs[i] == '+' || exprs[i] == '-'))
+					temp.pr = Priority::F;
+				tmp.push_back(temp);
+			}
 		}
 		else if (is_ParTh(exprs[i]))
 		{
@@ -128,7 +148,7 @@ void RevPol::calculate()
 				switch (tmp[i].pr)
 				{
 				case Priority::O:
-					if (tmp[i].str == "-") 
+					if (tmp[i].str == "~") //туть
 					{
 						One(i);
 						status = Status::Wait_Lexeme;
@@ -186,7 +206,7 @@ void RevPol::calculate()
 			switch (tmp[i].type)
 			{
 			case EType::Operation:
-				if (tmp[i].pr==Priority::F)
+				if (tmp[i].pr==Priority::F || tmp[i].pr == Priority::O)
 				{
 					if (oper.empty()) 
 					{
@@ -319,7 +339,7 @@ void RevPol::calculate()
 	if (!oper.empty() && status != Status::Error)
 	{
 		int si = oper.size();
-		for (int j = 0; j < si; j++)
+		for (int j = si; j > 0; j--)
 		{
 			polexprs.push_back(oper.top().str);
 			oper.pop();
@@ -365,6 +385,7 @@ void RevPol::Print_Revers()
 		std::cout << v << " ";
 	}
 	std::cout << std::endl;
+
 }
 
 void RevPol::Print_Begin()
